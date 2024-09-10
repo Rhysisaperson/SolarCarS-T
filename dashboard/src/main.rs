@@ -4,14 +4,13 @@ mod util;
 
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
+use config::read::read_config;
+//use config::structs::Speedometer;
 use glib::ControlFlow;
 use gtk4::{self as gtk, DrawingArea};
 use gtk::prelude::*;
 use gtk::{glib, Application, ApplicationWindow};
 use speedometer::lib::on_draw;
-use config::Speedometer;
-
-
 
 fn main() -> glib::ExitCode {
     let app = Application::builder()
@@ -29,7 +28,12 @@ fn main() -> glib::ExitCode {
 
         // Show the window.
         let canvas = DrawingArea::default();
-        let config = Arc::new(Speedometer::defualt());
+        //let config = Arc::new(Speedometer::defualt());
+        let config = read_config();
+        if config.is_none() {
+            panic!("no config file meownd")
+        }
+        let config = Arc::new(config.unwrap().speedometer);
         let speed = Arc::new(Mutex::new(0.5));
         let speed2 = speed.clone();
 
@@ -46,6 +50,7 @@ fn main() -> glib::ExitCode {
     app.run()
 }
 
+//kill everyone
 
 fn interval( debra :&DrawingArea, speed: Arc<Mutex<f64>>) -> ControlFlow{
     let mut speed_loc = speed.lock().unwrap();
