@@ -28,12 +28,11 @@ fn main() -> glib::ExitCode {
 
         // Show the window.
         let canvas = DrawingArea::default();
-        //let config = Arc::new(Speedometer::defualt());
+
         let config = read_config();
-        if config.is_none() {
-            panic!("no config file meownd")
-        }
-        let config = Arc::new(config.unwrap().speedometer);
+        let config = Arc::new(config.speedometer.to_decimal());
+
+        //tf2 coconut
         let speed = Arc::new(Mutex::new(0.5));
         let speed2 = speed.clone();
 

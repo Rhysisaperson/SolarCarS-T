@@ -1,29 +1,34 @@
-use std::{fs::{self, File}, io::Write};
+use std::{fs::{self, File}, io::Write, path::Path};
 
 use serde_json::Error;
 
 use super::structs::Config;
 
+use std::env;
+
+const KEY: &str = "HOME";
 const DEFAULT_CONFIG: &[u8] = include_bytes!("config.json");
 
-pub fn read_config() -> Option<Config> {
-    let mut contents = fs::read_to_string("./config.json");
+pub fn read_config() -> Config {
+    let home_dir = env::var_os(KEY).unwrap();
+    let home_dir = Path::new(&home_dir);
+    println!("{home_dir:?}");
+    // let config_directory = Path::new(Path::join(&home_dir, ".config/SolarCar/"));
+    // Attempt to read from the config file
+    // let contents = fs::read_to_string(Path::join(&home_dir, ".config/SolarCar/config.json"));
+    let contents = fs::read_to_string(home_dir.join(".config/SolarCar/config.json"));
 
+    // If config file does not exist, create one from the default one
     if contents.is_err() {
-        let mut file = File::create("./config.json").unwrap();
-        file.write(DEFAULT_CONFIG).unwrap();
-        contents = fs::read_to_string("./config.json");
+        let config_directory = home_dir.join(".config/SolarCar/");
+        let _ = fs::create_dir(&config_directory);
+    
+        let mut file = File::create(Path::join(&config_directory, "config.json")).unwrap();
+        file.write(DEFAULT_CONFIG).expect("Config could not be found or created.");
+        // contents = fs::read_to_string(Path::join(&full_path, "config.json"));
     }
 
-    let contents = contents.unwrap();
-
+    let contents = contents.unwrap_or(String::from_utf8(DEFAULT_CONFIG.to_vec()).unwrap());
     let json_output: Result<Config, Error> = serde_json::from_str(&contents);
-
-    return Some(json_output.unwrap());
-    // if json_output.is_ok() {
-        
-    // }
-
-
-    //return None;
+    return json_output.expect("Invalid config file");
 }
