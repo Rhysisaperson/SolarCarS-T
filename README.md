@@ -1,2 +1,2 @@
-# SolarCarS-T
-Firmware for Solar Car devices and systems
+# Solar Car S&T
+Firmware for the S&T Solar Car devices and systems
