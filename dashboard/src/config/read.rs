@@ -13,9 +13,8 @@ pub fn read_config() -> Config {
     let home_dir = env::var_os(KEY).unwrap();
     let home_dir = Path::new(&home_dir);
     println!("{home_dir:?}");
-    // let config_directory = Path::new(Path::join(&home_dir, ".config/SolarCar/"));
+
     // Attempt to read from the config file
-    // let contents = fs::read_to_string(Path::join(&home_dir, ".config/SolarCar/config.json"));
     let contents = fs::read_to_string(home_dir.join(".config/SolarCar/config.json"));
 
     // If config file does not exist, create one from the default one
@@ -25,7 +24,6 @@ pub fn read_config() -> Config {
     
         let mut file = File::create(Path::join(&config_directory, "config.json")).unwrap();
         file.write(DEFAULT_CONFIG).expect("Config could not be found or created.");
-        // contents = fs::read_to_string(Path::join(&full_path, "config.json"));
     }
 
     let contents = contents.unwrap_or(String::from_utf8(DEFAULT_CONFIG.to_vec()).unwrap());

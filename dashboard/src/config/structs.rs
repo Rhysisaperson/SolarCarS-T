@@ -54,7 +54,6 @@ pub struct Color {
 
 }
 
-// This might be what we want, but I have no clue where to call it
 impl Color {
     fn to_decimal (self) -> Color {
         Color {red: self.red / 255.0, green: self.green / 255.0, blue: self.blue / 255.0}

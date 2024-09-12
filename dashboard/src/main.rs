@@ -5,7 +5,6 @@ mod util;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use config::read::read_config;
-//use config::structs::Speedometer;
 use glib::ControlFlow;
 use gtk4::{self as gtk, DrawingArea};
 use gtk::prelude::*;
